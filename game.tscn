@@ -3,15 +3,45 @@
 [ext_resource type="PackedScene" uid="uid://d3v0ao12w5cgy" path="res://bd.tscn" id="1_fc0e3"]
 [ext_resource type="PackedScene" uid="uid://c1sxtwlqfsmd1" path="res://playerbox.tscn" id="3_ryrav"]
 [ext_resource type="PackedScene" uid="uid://drkp4fvmhbc70" path="res://thebigP.tscn" id="4_eow3j"]
+[ext_resource type="FontFile" uid="uid://du3hx43sppy4t" path="res://Jua/Jua-Regular.ttf" id="4_fc0e3"]
+[ext_resource type="Texture2D" uid="uid://qg84skot320o" path="res://win!.png" id="5_ryrav"]
+[ext_resource type="Texture2D" uid="uid://v4xnqfxvmph6" path="res://lose..png" id="6_eow3j"]
 
 [sub_resource type="GDScript" id="GDScript_vao7y"]
 script/source = "extends Node2D
 var rain: PackedScene = load(\"res://itsraining.tscn\")
 var sc = 0
+var last = 0
+func _ready():
+	last = Global.score
 func _on_timer_timeout():
 	var fallingpeep = rain.instantiate()
 	$peepfall.add_child(fallingpeep)
 	
+func _process(_delta):
+	if Global.score != last:
+		print(Global.score)
+		last = Global.score
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_fc0e3"]
+font = ExtResource("4_fc0e3")
+font_size = 100
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="GDScript" id="GDScript_d2e78"]
+script/source = "extends Label
+var last = 0
+func _ready():
+	last = Global.score
+func _process(_delta):
+	if Global.score != last:
+		text = str(Global.score)
+		last = Global.score
+	if Global.score < 0:
+		$\"../lose_\".visible = true
+	if Global.score > 20:
+		$\"../win!\".visible = true
 "
 
 [node name="game" type="Node2D" unique_id=61710432]
@@ -23,7 +53,7 @@ script = SubResource("GDScript_vao7y")
 collision_layer = 4
 
 [node name="pep" parent="." unique_id=653321145 instance=ExtResource("4_eow3j")]
-position = Vector2(544, 576)
+position = Vector2(554, 212)
 collision_mask = 6
 
 [node name="Timer" type="Timer" parent="." unique_id=565638745]
@@ -31,5 +61,26 @@ wait_time = 0.5
 autostart = true
 
 [node name="peepfall" type="Node2D" parent="." unique_id=1579331966]
+
+[node name="Label" type="Label" parent="." unique_id=1817212741]
+offset_left = 47.0
+offset_top = 400.0
+offset_right = 193.0
+offset_bottom = 500.0
+text = "0"
+label_settings = SubResource("LabelSettings_fc0e3")
+script = SubResource("GDScript_d2e78")
+
+[node name="win!" type="Sprite2D" parent="." unique_id=1019654967]
+visible = false
+position = Vector2(571.25, 314.68753)
+scale = Vector2(0.24025579, 0.2364168)
+texture = ExtResource("5_ryrav")
+
+[node name="lose_" type="Sprite2D" parent="." unique_id=444841103]
+visible = false
+position = Vector2(591.99994, 354.00003)
+scale = Vector2(0.26822558, 0.259963)
+texture = ExtResource("6_eow3j")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -7,9 +7,8 @@
 script/source = "extends Area2D
 var rng := RandomNumberGenerator.new()
 var sp = rng.randi_range(400, 600)
-
+var slime = randi_range(1, 2)
 func _ready():
-	var slime = randi_range(1, 2)
 	if slime > 1:
 		$Sprite2D2.hide()
 	else:
@@ -23,6 +22,10 @@ func _process(delta):
 
 func _on_body_entered(body):
 	hide()
+	if slime > 1:
+		Global.score += 1
+	else:
+		Global.score -=1
 "
 
 [node name="ITSRAINING" type="Area2D" unique_id=1067747378]
