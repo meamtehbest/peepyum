@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://rl0q2bvk04wl"]
+
+[ext_resource type="PackedScene" uid="uid://d3v0ao12w5cgy" path="res://bd.tscn" id="1_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://c1sxtwlqfsmd1" path="res://playerbox.tscn" id="3_ryrav"]
+[ext_resource type="PackedScene" uid="uid://drkp4fvmhbc70" path="res://thebigP.tscn" id="4_eow3j"]
+
+[sub_resource type="GDScript" id="GDScript_vao7y"]
+script/source = "extends Node2D
+var rain: PackedScene = load(\"res://itsraining.tscn\")
+var sc = 0
+func _on_timer_timeout():
+	var fallingpeep = rain.instantiate()
+	$peepfall.add_child(fallingpeep)
+	
+"
+
+[node name="game" type="Node2D" unique_id=61710432]
+script = SubResource("GDScript_vao7y")
+
+[node name="bd" parent="." unique_id=1224310858 instance=ExtResource("1_fc0e3")]
+
+[node name="playerbox" parent="." unique_id=744795047 instance=ExtResource("3_ryrav")]
+collision_layer = 4
+
+[node name="pep" parent="." unique_id=653321145 instance=ExtResource("4_eow3j")]
+position = Vector2(544, 576)
+collision_mask = 6
+
+[node name="Timer" type="Timer" parent="." unique_id=565638745]
+wait_time = 0.5
+autostart = true
+
+[node name="peepfall" type="Node2D" parent="." unique_id=1579331966]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

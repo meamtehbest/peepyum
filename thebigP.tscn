@@ -1,0 +1,174 @@
+[gd_scene format=3 uid="uid://drkp4fvmhbc70"]
+
+[ext_resource type="Texture2D" uid="uid://bg0ds7oktphxt" path="res://peeprun.png" id="1_xbc43"]
+
+[sub_resource type="GDScript" id="GDScript_d2e78"]
+resource_name = "pep"
+script/source = "extends CharacterBody2D
+
+
+const SPEED = 300.0
+const JUMP_VELOCITY = -400.0
+
+
+func _physics_process(delta: float) -> void:
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"up\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var direction := Input.get_axis(\"left\", \"right\") * 2
+	if direction:
+		velocity.x = direction * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+
+	move_and_slide()
+	
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+
+func _ready():
+	animated_sprite.play(\"idle\")
+	animated_sprite.animation_finished.connect(_on_animation_finished)
+	animated_sprite.animation_looped.connect(_on_animation_looped)
+func _process(_delta: float) -> void:
+	if Input.is_action_pressed(\"left\"):
+		$AnimatedSprite2D.flip_h = true
+	if Input.is_action_pressed(\"right\"):
+		$AnimatedSprite2D.flip_h = false
+	if Input.is_action_pressed(\"right\") or Input.is_action_pressed(\"left\"):
+		animated_sprite.play(\"run\")
+func _on_animation_looped() -> void:
+	if animated_sprite.animation == \"run\" and not Input.is_action_pressed(\"right\") or Input.is_action_pressed(\"left\"):
+		animated_sprite.play(\"slow\")
+func _on_animation_finished() -> void:
+	if animated_sprite.animation == \"slow\":
+		if Input.is_action_pressed(\"right\") or Input.is_action_pressed(\"left\"):
+			animated_sprite.play(\"run\")
+		else:
+			animated_sprite.play(\"idle\")
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uty7l"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(0, 0, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_77dp3"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(189, 0, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00tp4"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(378, 0, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8uh7m"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(567, 0, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6uqi0"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(0, 189, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppyta"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(189, 189, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g14j6"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(567, 189, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vbegm"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(0, 378, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ehkex"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(189, 378, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xersf"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(378, 378, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5tkv4"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(567, 378, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0m0f1"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(0, 567, 189, 189)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b0q6j"]
+atlas = ExtResource("1_xbc43")
+region = Rect2(189, 567, 189, 189)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vao7y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uty7l")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_77dp3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00tp4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8uh7m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6uqi0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppyta")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g14j6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vbegm")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ehkex")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xersf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5tkv4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0m0f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b0q6j")
+}],
+"loop": 0,
+"name": &"slow",
+"speed": 5.0
+}]
+
+[node name="pep" type="CharacterBody2D" unique_id=653321145]
+script = SubResource("GDScript_d2e78")
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1304300282]
+polygon = PackedVector2Array(8, -34, -10, -28, -23, -19, -31, -6, -32, 0, -31, 6, -29, 13, -22, 26, -4, 34, 25, 37, 50, 34, 66, 21, 75, 4, 70, -15, 55, -27, 35, -33, 25, -38, 8, -42, 12, -35)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=341712046]
+sprite_frames = SubResource("SpriteFrames_vao7y")
+animation = &"idle"

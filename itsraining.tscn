@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://e3fwwu6hdyyx"]
+
+[ext_resource type="Texture2D" uid="uid://bunyhf1m5yhxr" path="res://00b245ec143b6fc5d2ae1f978dda8fab.svg" id="1_gmkqu"]
+[ext_resource type="Texture2D" uid="uid://b133g6p4jmdv4" path="res://ff768607c7f0f6967d1cd0bec2203b36.svg" id="2_7lhvm"]
+
+[sub_resource type="GDScript" id="GDScript_feb5d"]
+script/source = "extends Area2D
+var rng := RandomNumberGenerator.new()
+var sp = rng.randi_range(400, 600)
+
+func _ready():
+	var slime = randi_range(1, 2)
+	if slime > 1:
+		$Sprite2D2.hide()
+	else:
+		$Sprite2D.hide()
+	var width = get_viewport().get_visible_rect().size[0]
+	var rx = rng.randi_range(3, width-3)
+	var ry = rng.randi_range(-150, -50)
+	position = Vector2(rx, ry)
+func _process(delta):
+	position += Vector2(0, 1.0) * sp * delta
+
+func _on_body_entered(body):
+	hide()
+"
+
+[node name="ITSRAINING" type="Area2D" unique_id=1067747378]
+collision_layer = 2
+script = SubResource("GDScript_feb5d")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=892709068]
+polygon = PackedVector2Array(-16, 0, -19, 4, -23, 1, -23, 15, -22, 36, -16, 45, -10, 47, -5, 46, 2, 44, 7, 38, 12, 32, 17, 17, 15, 1, 11, -6, 1, -8, -7, -3)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1058421435]
+rotation = -1.2217305
+texture = ExtResource("1_gmkqu")
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=1590963865]
+position = Vector2(-2.9999998, 16.999998)
+rotation = 3.1415927
+scale = Vector2(0.83557093, 1.1784334)
+texture = ExtResource("2_7lhvm")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
